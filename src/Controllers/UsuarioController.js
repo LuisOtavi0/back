@@ -2,34 +2,57 @@ const UsuarioModel = require("../Models/UsuarioModel");
 
 class UsuarioController {
     async create(req, res) {
-        const usuario = await UsuarioModel.create(req.body);
+        try {
+            const usuario = await UsuarioModel.create(req.body);
 
-        return res.status(200).json(usuario);
+            const {senha, ...novoUsuario} = usuario.toObject();
+
+            return res.status(200).json(novoUsuario);
+        } catch (error) {
+            res.status(500).json({message: "Problema!", error: error.message});
+        }
     }
 
     async read(req, res) {
-        const usuarios = await UsuarioModel.find();
+        try {
+            const usuarios = await UsuarioModel.find();
 
-        return res.status(200).json(usuarios);
+            return res.status(200).json(usuarios);
+        } catch (error) {
+            res.status(500).json({message: "Problema!", error: error.message});
+        }
     }
 
     async update(req, res) {
-        const {id} = req.params;
+        try {
+            const {id} = req.params;
+            const usuarioEncontrado = await UsuarioModel.findById(id);
+            
+            if(!usuarioEncontrado) return res.status(404).json({message: "Usuário não encontrado."});
 
-        const usuario = await UsuarioModel.findByIdAndUpdate(id, req.body, {new: true});
+            const usuario = await usuarioEncontrado.set(req.body).save();
 
-        return res.status(200).json(usuario);
+            return res.status(200).json(usuario);
+        } catch (error) {
+            res.status(500).json({message: "Problema!", error: error.message});
+        }
+        
     }
 
     async delete(req, res) {
-        const {id} = req.params
+        try {
+            const {id} = req.params
+            const usuarioEncontrado = await UsuarioModel.findById(id);
 
-        await UsuarioModel.findByIdAndDelete(id);
+            if(!usuarioEncontrado) return res.status(404).json({message: "Usuário não encontrado."});
 
-        return res.status(200).json({"mensagem": "Usuario deletado com sucesso!"});
+            await usuarioEncontrado.deleteOne();
+
+            return res.status(200).json({"mensagem": "Usuario deletado com sucesso!"});
+        } catch (error) {
+            res.status(500).json({message: "Problema!", error: error.message});
+        }
     }
-
-
 }
 
 module.exports = new UsuarioController();

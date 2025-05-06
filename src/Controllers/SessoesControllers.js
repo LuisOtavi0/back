@@ -2,15 +2,23 @@ const SessoesModel = require("../Models/SessoesModel");
 
 class SessoesController {
     async create(req, res) {
-        const sessoes = await SessoesModel.create(req.body);
+        try {
+            const sessoes = await SessoesModel.create(req.body);
 
-        return res.status(200).json(sessoes);
+            return res.status(200).json(sessoes);
+        } catch (error) {
+            res.status(500).json({message: "Problema!", error: error.message});
+        }
     }
 
     async read(req, res) {
-        const sessoes = await SessoesModel.find().populate('id_usuario', '-senha');
+        try {
+            const sessoes = await SessoesModel.find().populate('id_usuario', '-senha');
 
-        return res.status(200).json(sessoes);
+            return res.status(200).json(sessoes);
+        } catch (error) {
+            res.status(500).json({message: "Problema!", error: error.message});
+        }
     }
 
     update(req, res) {
@@ -18,11 +26,15 @@ class SessoesController {
     }
 
     async delete(req, res) {
-        const {id} = req.params;
+        try {
+            const {id} = req.params;
 
-        await SessoesModel.findByIdAndDelete(id);
-
-        return res.status(200).json({ "mensagem": "Sessão deletadas com sucesso!"});
+            await SessoesModel.findByIdAndDelete(id);
+    
+            return res.status(200).json({ "mensagem": "Sessão deletadas com sucesso!"});
+        } catch (error) {
+            res.status(500).json({message: "Problema!", error: error.message});
+        }
     }
 }
 

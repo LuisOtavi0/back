@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const SessoesSchema = new Schema({
     id_usuario: {
         type: Schema.Types.ObjectId,
-        ref: 'usuarios'
+        ref: 'usuarios',
+        unique: true,
     }
 }, {
     timestamps: true

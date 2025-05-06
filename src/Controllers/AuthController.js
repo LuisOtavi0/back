@@ -14,19 +14,15 @@ class AuthController {
             if (!ehCorrespondente)
                 return res.status(403).json({message: "Email ou senha inválidos!"});
 
-            const {senha: hashedSenha, ...payload} = usuarioEncontrado.toObject();
+            const {senha: hashedSenha, ...usuario} = usuarioEncontrado.toObject();
 
-            const token = await jwt.sign({
-                payload,
-            }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE_IN});
+            const token = jwt.sign(usuario, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE_IN});
 
             res.status(200).json({token});
         } catch (error) {
             res.status(500).json({message: "Problema!", error: error.message});
-        }
-        
+        }   
     }
-
 }
 
 module.exports = new AuthController();

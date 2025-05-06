@@ -13,7 +13,7 @@ const create = validateRequest({
 
 const destroy = validateRequest({
     params: z.object({
-        id: z.custom(mongoose.isValidObjectId, "O ID da sessão é inválido!"),
+        id_usuario: z.custom(mongoose.isValidObjectId, "O ID do usuário é inválido!"),
     }),
 });
 

@@ -10,7 +10,7 @@ const create = validateRequest({
         .email("Email inválido."),
         senha: z.string({required_error: "É obrigatório uma senha!"}),
         cargo: z.string({required_error: "É obrigatório um cargo!"}),
-        status: z.string({required_error: "É obrigatório um status!"}),
+        status: z.string().optional(),
     }),
 });
 
